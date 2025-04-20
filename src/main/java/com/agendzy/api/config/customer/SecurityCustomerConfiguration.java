@@ -1,8 +1,8 @@
-package com.agendzy.api.config.business;
+package com.agendzy.api.config.customer;
 
 import com.agendzy.api.core.gateway.common.FindOneGateway;
 import com.agendzy.api.core.usecase.common.boundary.input.query.WhereEmail;
-import com.agendzy.api.entrypoint.http.security.business.JwtCollaboratorAuthenticationFilter;
+import com.agendzy.api.entrypoint.http.security.customer.JwtCustomerAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,38 +34,35 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableGlobalAuthentication
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class SecurityBusinessConfiguration {
+public class SecurityCustomerConfiguration {
 
-    private final JwtCollaboratorAuthenticationFilter jwtCollaboratorAuthenticationFilter;
+    private final JwtCustomerAuthenticationFilter jwtCustomerAuthenticationFilter;
 
     private final FindOneGateway<com.agendzy.api.core.domain.common.User, WhereEmail> findUserByEmail;
 
     private final PasswordEncoder passwordEncoder;
 
     @Bean
-    public SecurityFilterChain collaboratorFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain customerFilterChain(HttpSecurity http) throws Exception {
         return http
-            .securityMatcher("/v1/businesses/**")
+            .securityMatcher("/v1/customers/**")
             .httpBasic(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .csrf(AbstractHttpConfigurer::disable)
-            .cors(cors -> cors.configurationSource(corsCollaboratorConfiguration()))
+            .cors(cors -> cors.configurationSource(corsCostumerConfiguration()))
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
-            .authenticationProvider(authenticationCollaboratorProvider())
-            .addFilterBefore(jwtCollaboratorAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.OPTIONS, "**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/health-check").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/v1/businesses").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/v1/customers").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/v1/businesses/auth/**").permitAll()
-                    .anyRequest().authenticated()
-            ).build();
+            .authenticationProvider(authenticationCustomerProvider())
+            .addFilterBefore(jwtCustomerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .authorizeHttpRequests(request -> request
+                .requestMatchers(HttpMethod.POST, "/v1/customers").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/customers/auth/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .build();
     }
 
     @Bean
-    public AuthenticationProvider authenticationCollaboratorProvider() {
+    public AuthenticationProvider authenticationCustomerProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(username -> {
             var responseUser = findUserByEmail.execute(new WhereEmail(username));
@@ -84,7 +81,7 @@ public class SecurityBusinessConfiguration {
     }
 
     @Bean
-    public CorsConfigurationSource corsCollaboratorConfiguration() {
+    public CorsConfigurationSource corsCostumerConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));

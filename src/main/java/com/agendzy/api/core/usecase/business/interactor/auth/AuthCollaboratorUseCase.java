@@ -52,7 +52,7 @@ public class AuthCollaboratorUseCase {
 
             return buildBusinessListResponse(collaborators);
         } catch (Exception e) {
-            LogUtil.logError("Erro durante autenticação de colaborador.", e);
+            LogUtil.logError("Erro durante autenticação do colaborador.", e);
             throw e;
         }
     }

@@ -1,4 +1,4 @@
-package com.agendzy.api.config.common;
+package com.agendzy.api.config.common.buildproperties;
 
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Properties;
 
 @Configuration
-public class BuildPropertiesConfig {
+public class BuildCommonPropertiesConfig {
 
     @Bean
     public BuildProperties buildProperties() {

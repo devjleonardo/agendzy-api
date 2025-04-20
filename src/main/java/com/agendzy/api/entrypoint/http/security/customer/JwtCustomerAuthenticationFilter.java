@@ -1,8 +1,9 @@
-package com.agendzy.api.entrypoint.http.security.business;
+package com.agendzy.api.entrypoint.http.security.customer;
 
 import com.agendzy.api.core.domain.business.collaborator.Collaborator;
-import com.agendzy.api.core.usecase.business.interactor.auth.AuthCollaboratorFilterUseCase;
+import com.agendzy.api.core.domain.customer.Customer;
 import com.agendzy.api.core.usecase.common.boundary.output.data.outputresponse.OutputResponse;
+import com.agendzy.api.core.usecase.customer.interactor.auth.AuthCustomerFilterUseCase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,9 +27,9 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class JwtCollaboratorAuthenticationFilter extends OncePerRequestFilter {
+public class JwtCustomerAuthenticationFilter extends OncePerRequestFilter {
 
-    private final AuthCollaboratorFilterUseCase authCollaboratorFilterUseCase;
+    private final AuthCustomerFilterUseCase authCustomerFilterUseCase;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -49,7 +50,7 @@ public class JwtCollaboratorAuthenticationFilter extends OncePerRequestFilter {
                     .replace("bearer", "")
                     .trim();
 
-            OutputResponse<Collaborator> authResponse = authCollaboratorFilterUseCase.execute(formattedToken);
+            OutputResponse<Customer> authResponse = authCustomerFilterUseCase.execute(formattedToken);
 
             if (authResponse.isError()) {
                 buildErrorResponse(response, authResponse);
@@ -63,11 +64,11 @@ public class JwtCollaboratorAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void handleAuthentication(HttpServletRequest request, Collaborator collaborator, SecurityContext context) {
-        var authority = new SimpleGrantedAuthority(collaborator.getRole().name());
+    private void handleAuthentication(HttpServletRequest request, Customer customer, SecurityContext context) {
+        var authority = new SimpleGrantedAuthority("ROLE_CUSTOMER");
 
         var authentication = new UsernamePasswordAuthenticationToken(
-            getPrincipal(collaborator, List.of(authority)),
+            getPrincipal(customer, List.of(authority)),
             null,
             List.of(authority)
         );
@@ -76,8 +77,8 @@ public class JwtCollaboratorAuthenticationFilter extends OncePerRequestFilter {
         context.setAuthentication(authentication);
     }
 
-    private UserDetails getPrincipal(Collaborator collaborator, List<SimpleGrantedAuthority> authorities) {
-        var user = collaborator.getUser();
+    private UserDetails getPrincipal(Customer customer, List<SimpleGrantedAuthority> authorities) {
+        var user = customer.getUser();
         return new User(user.getEmail(), user.getPassword(), authorities);
     }
 
