@@ -57,6 +57,7 @@ public class SecurityBusinessConfiguration {
                     .requestMatchers(HttpMethod.GET, "/").permitAll()
                     .requestMatchers(HttpMethod.GET, "/health-check").permitAll()
                     .requestMatchers(HttpMethod.POST, "/v1/businesses").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/v1/customers").permitAll()
                     .requestMatchers(HttpMethod.POST, "/v1/businesses/auth/**").permitAll()
                     .anyRequest().authenticated()
             ).build();
