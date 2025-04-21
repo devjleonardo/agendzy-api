@@ -13,7 +13,7 @@ public abstract class CustomerContextCurrent {
         CONTEXT.set(context);
     }
 
-    public static String getCustomerIdId() {
+    public static String getCustomerId() {
         return CONTEXT.get().getCustomerId();
     }
 

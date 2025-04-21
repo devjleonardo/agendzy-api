@@ -1,6 +1,7 @@
 package com.agendzy.api.core.usecase.appointment.boundary.output.data;
 
 import com.agendzy.api.core.domain.appointment.Appointment;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppointmentOutput {
 
     private String id;

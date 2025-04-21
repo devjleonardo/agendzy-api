@@ -36,7 +36,7 @@ public class CreateAppointmentByCustomerUseCase {
     public OutputResponse<AppointmentOutput> execute(CreateAppointmentByCustomerInput input) {
         String businessId = input.getBusinessId();
 
-        Customer customer = findCustomer(CustomerContextCurrent.getCustomerIdId()).getData();
+        Customer customer = findCustomer(CustomerContextCurrent.getCustomerId()).getData();
         Business business = findBusiness(businessId).getData();
         Professional professional = findProfessional(businessId, input.getProfessionalId());
         BusinessService service = findService(businessId, input.getServiceId());
@@ -49,12 +49,10 @@ public class CreateAppointmentByCustomerUseCase {
 
         Appointment appointment = new Appointment();
         appointment.setCustomer(customer);
-        appointment.setCustomerName(null);
-        appointment.setCustomerPhone(null);
         appointment.setStartTime(input.getStartTime());
         appointment.setEndTime(endTime);
         appointment.setStatus(AppointmentStatus.PENDING);
-        appointment.setNotes(null);
+        appointment.setNotes(input.getNotes());
         appointment.setCustomerNotes(input.getCustomerNotes());
         appointment.setWalkIn(false);
         appointment.setPreparationTimeInMin(0);
