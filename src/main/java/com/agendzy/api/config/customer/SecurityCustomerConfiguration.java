@@ -1,16 +1,18 @@
 package com.agendzy.api.config.customer;
 
 import com.agendzy.api.core.gateway.common.FindOneGateway;
+import com.agendzy.api.core.gateway.customer.ExtractCustomerAuthTokenGateway;
 import com.agendzy.api.core.usecase.common.boundary.input.query.WhereEmail;
+import com.agendzy.api.core.usecase.customer.interactor.auth.AuthCustomerFilterUseCase;
 import com.agendzy.api.entrypoint.http.security.customer.JwtCustomerAuthenticationFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,26 +32,22 @@ import java.util.List;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalAuthentication
-@EnableMethodSecurity
+@Order(2)
 @RequiredArgsConstructor
 public class SecurityCustomerConfiguration {
 
-    private final JwtCustomerAuthenticationFilter jwtCustomerAuthenticationFilter;
-
     private final FindOneGateway<com.agendzy.api.core.domain.common.User, WhereEmail> findUserByEmail;
-
     private final PasswordEncoder passwordEncoder;
 
     @Bean
-    public SecurityFilterChain customerFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain customerFilterChain(HttpSecurity http,
+                                                   JwtCustomerAuthenticationFilter jwtCustomerAuthenticationFilter) throws Exception {
         return http
             .securityMatcher("/v1/customers/**")
             .httpBasic(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .csrf(AbstractHttpConfigurer::disable)
-            .cors(cors -> cors.configurationSource(corsCostumerConfiguration()))
+            .cors(cors -> cors.configurationSource(corsCustomerConfiguration()))
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
             .authenticationProvider(authenticationCustomerProvider())
             .addFilterBefore(jwtCustomerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -66,26 +64,20 @@ public class SecurityCustomerConfiguration {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(username -> {
             var responseUser = findUserByEmail.execute(new WhereEmail(username));
-
             if (responseUser.isSuccess()) {
                 var user = responseUser.getData();
                 return new User(user.getEmail(), user.getPassword(), List.of());
             }
-
             throw new UsernameNotFoundException(String.format("User %s was not found in the database", username));
         });
-
         authProvider.setPasswordEncoder(passwordEncoder);
-
         return authProvider;
     }
 
     @Bean
-    public CorsConfigurationSource corsCostumerConfiguration() {
+    public CorsConfigurationSource corsCustomerConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
-
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
         configuration.setExposedHeaders(List.of("Authorization", "Origin"));
@@ -97,5 +89,11 @@ public class SecurityCustomerConfiguration {
         return source;
     }
 
+    @Bean
+    public JwtCustomerAuthenticationFilter jwtCustomerAuthenticationFilter(AuthCustomerFilterUseCase authCustomerFilterUseCase,
+                                                                           ObjectMapper objectMapper,
+                                                                           ExtractCustomerAuthTokenGateway extractAuthToken) {
+        return new JwtCustomerAuthenticationFilter(authCustomerFilterUseCase, objectMapper, extractAuthToken);
+    }
 
 }

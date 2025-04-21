@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("v1/business/{businessId}/appointments")
 @RequiredArgsConstructor
-public class AppointmentResource {
+public class AppointmentCollaboratorResource {
 
     private final CreateAppointmentByCollaboratorUseCase createAppointmentByCollaboratorUseCase;
 
     @PostMapping
-    public ResponseEntity<Object> createAppointment(@PathVariable String businessId,
-                                                    @RequestBody @Valid CreateAppointmentByCollaboratorInput input) {
+    public ResponseEntity<Object> createAppointmentByCollaborator(@PathVariable String businessId,
+                                                      @RequestBody @Valid CreateAppointmentByCollaboratorInput input) {
         return HandlingResponse.execute(createAppointmentByCollaboratorUseCase.execute(businessId, input));
     }
 
