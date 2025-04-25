@@ -8,8 +8,11 @@ import lombok.Setter;
 public class BusinessOpeningHoursInput {
 
     private String dayOfWeek;
+
     private String startTime;
+
     private String endTime;
+
     private boolean enabled;
     
 }

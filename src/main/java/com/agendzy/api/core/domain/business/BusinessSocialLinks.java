@@ -7,7 +7,7 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-public class SocialLinks {
+public class BusinessSocialLinks {
 
     private String website;
 

@@ -7,10 +7,12 @@ import com.agendzy.api.core.domain.business.openinghours.BusinessOpeningHours;
 import com.agendzy.api.core.domain.business.phone.BusinessPhone;
 import com.agendzy.api.core.domain.business.phone.PhoneType;
 import com.agendzy.api.core.domain.business.professional.Professional;
+import com.agendzy.api.core.domain.business.service.BusinessService;
 import com.agendzy.api.core.domain.common.User;
 import com.agendzy.api.core.gateway.common.SaveGateway;
 import com.agendzy.api.core.usecase.business.boundary.input.data.BusinessOpeningHoursInput;
 import com.agendzy.api.core.usecase.business.boundary.input.data.CreateBusinessInput;
+import com.agendzy.api.core.usecase.business.boundary.input.data.service.ServiceInput;
 import com.agendzy.api.core.usecase.business.boundary.output.BusinessCreatedOutput;
 import com.agendzy.api.core.usecase.common.boundary.output.data.outputresponse.OutputResponse;
 import com.agendzy.api.core.usecase.common.interactor.CreateUserUseCase;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -63,6 +66,11 @@ public class CreateBusinessUseCase {
         business.setName(input.getName());
         business.setSegment(input.getSegment());
         business.setLocation(input.getLocation());
+        business.setTeamSize(input.getTeamSize());
+
+        if (input.getServices() != null) {
+            business.setServices(mapServices(input, business));
+        }
 
         if (input.getOpeningHours() != null) {
             business.setOpeningHours(mapOpeningHours(input.getOpeningHours(), business));
@@ -91,6 +99,26 @@ public class CreateBusinessUseCase {
         collaborator.setUser(user);
         collaborator.setBusiness(business);
         return collaborator;
+    }
+
+    private Set<BusinessService> mapServices(CreateBusinessInput input, Business business) {
+        return input.getServices().stream()
+            .filter(this::isValidServiceInput)
+            .map(serviceInput -> {
+                BusinessService service = new BusinessService();
+                service.setName(serviceInput.getName());
+                service.setPrice(serviceInput.getPrice());
+                service.setDuration(Duration.ofMinutes(serviceInput.getDurationInMinutes()));
+                service.setBusiness(business);
+                return service;
+            })
+            .collect(Collectors.toSet());
+    }
+
+    private boolean isValidServiceInput(ServiceInput serviceInput) {
+        return serviceInput.getName() != null
+            && serviceInput.getPrice() != null
+            && serviceInput.getDurationInMinutes() != null;
     }
 
     private Set<BusinessOpeningHours> mapOpeningHours(List<BusinessOpeningHoursInput> inputs, Business business) {

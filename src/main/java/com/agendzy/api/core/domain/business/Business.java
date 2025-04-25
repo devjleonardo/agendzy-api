@@ -3,6 +3,7 @@ package com.agendzy.api.core.domain.business;
 import com.agendzy.api.core.domain.business.collaborator.Collaborator;
 import com.agendzy.api.core.domain.business.openinghours.BusinessOpeningHours;
 import com.agendzy.api.core.domain.business.phone.BusinessPhone;
+import com.agendzy.api.core.domain.business.service.BusinessService;
 import com.agendzy.api.core.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,15 +31,19 @@ public class Business extends BaseEntity {
 
     private String description;
 
-    @Embedded
-    private SocialLinks socialLinks;
-
-    @Embedded
-    private BusinessLocation location;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BusinessSegment segment;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BusinessTeamSize teamSize;
+
+    @Embedded
+    private BusinessSocialLinks socialLinks;
+
+    @Embedded
+    private BusinessLocation location;
 
     @OneToOne
     @JoinColumn
@@ -46,6 +51,9 @@ public class Business extends BaseEntity {
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BusinessPhone> phones = new ArrayList<>();
+
+    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BusinessService> services = new HashSet<>();
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
     private Set<BusinessOpeningHours> openingHours = new HashSet<>();
@@ -55,6 +63,10 @@ public class Business extends BaseEntity {
 
     public void addPhone(BusinessPhone phone) {
         phones.add(phone);
+    }
+
+    public void addService(BusinessService service) {
+        services.add(service);
     }
 
     @Override

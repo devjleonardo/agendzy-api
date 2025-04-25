@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: agendzy_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: agendzy
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  agendzy_app:
+    build: .
+    container_name: agendzy_backend
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/agendzy
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
+    driver: local
