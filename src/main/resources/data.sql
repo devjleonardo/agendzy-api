@@ -1,55 +1,55 @@
--- Limpa os dados
-DELETE FROM business_opening_hours;
-DELETE FROM business_service;
-UPDATE business SET owner_id = NULL;
-DELETE FROM business_collaborator;
-DELETE FROM business;
-DELETE FROM users;
-
--- Usuário (dono do colaborador)
-INSERT INTO users (id, full_name, email, phone_number, password, creation_completed)
-VALUES ('1', 'Lucas Barbosa', 'lucas@gmail.com', '11999998888', '123', false);
-
--- Negócio (barbearia) SEM owner_id inicialmente
-INSERT INTO business (
-    id, name, segment, team_size, address, zipcode, city, state,
-    latitude, longitude, time_zone_name
-)
-VALUES (
-    '1', 'Barbearia Estilo Fino', 'BARBER_SHOP', 'ONE_TO_TWO',
-    'Avenida Goiás, 580', '87200-200', 'Cianorte', 'PR',
-    -23.6594, -52.6050, 'America/Sao_Paulo'
-);
-
--- Colaborador vinculado ao negócio
-INSERT INTO business_collaborator (
-    id, user_id, business_id, name, nickname, role, active, dtype
-)
-VALUES (
-    '1', '1', '1', 'Lucas Barbosa', 'Lucas', 'OWNER', true, 'Professional'
-);
-
--- Atualiza o owner_id do negócio agora que o colaborador foi criado
-UPDATE business SET owner_id = '1' WHERE id = '1';
-
--- Serviços (com duração em minutos inteiros)
-INSERT INTO business_service (
-    id, business_id, name, duration, price
-)
-VALUES
-    ('1', '1', 'Corte Masculino', 30, 35.00),
-    ('2', '1', 'Barba', 20, 25.00),
-    ('3', '1', 'Corte + Barba', 50, 55.00);
-
--- Horários de funcionamento
-INSERT INTO business_opening_hours (
-    id, business_id, day_of_week, start_time, end_time, enabled
-)
-VALUES
-    ('1', '1', 'MONDAY', '09:00', '19:00', true),
-    ('2', '1', 'TUESDAY', '09:00', '19:00', true),
-    ('3', '1', 'WEDNESDAY', '09:00', '19:00', true),
-    ('4', '1', 'THURSDAY', '09:00', '19:00', true),
-    ('5', '1', 'FRIDAY', '09:00', '19:00', true),
-    ('6', '1', 'SATURDAY', '08:00', '17:00', true),
-    ('7', '1', 'SUNDAY', '00:00', '00:00', false);
+-- -- Limpa os dados
+-- DELETE FROM business_opening_hours;
+-- DELETE FROM business_service;
+-- UPDATE business SET owner_id = NULL;
+-- DELETE FROM business_collaborator;
+-- DELETE FROM business;
+-- DELETE FROM users;
+--
+-- -- Usuário (dono do colaborador)
+-- INSERT INTO users (id, full_name, email, phone_number, password, creation_completed)
+-- VALUES ('1', 'Lucas Barbosa', 'lucas@gmail.com', '11999998888', '123', false);
+--
+-- -- Negócio (barbearia) SEM owner_id inicialmente
+-- INSERT INTO business (
+--     id, name, segment, team_size, address, zipcode, city, state,
+--     latitude, longitude, time_zone_name
+-- )
+-- VALUES (
+--     '1', 'Barbearia Estilo Fino', 'BARBER_SHOP', 'ONE_TO_TWO',
+--     'Avenida Goiás, 580', '87200-200', 'Cianorte', 'PR',
+--     -23.6594, -52.6050, 'America/Sao_Paulo'
+-- );
+--
+-- -- Colaborador vinculado ao negócio
+-- INSERT INTO business_collaborator (
+--     id, user_id, business_id, name, nickname, role, active, dtype
+-- )
+-- VALUES (
+--     '1', '1', '1', 'Lucas Barbosa', 'Lucas', 'OWNER', true, 'Professional'
+-- );
+--
+-- -- Atualiza o owner_id do negócio agora que o colaborador foi criado
+-- UPDATE business SET owner_id = '1' WHERE id = '1';
+--
+-- -- Serviços (com duração em minutos inteiros)
+-- INSERT INTO business_service (
+--     id, business_id, name, duration, price
+-- )
+-- VALUES
+--     ('1', '1', 'Corte Masculino', 30, 35.00),
+--     ('2', '1', 'Barba', 20, 25.00),
+--     ('3', '1', 'Corte + Barba', 50, 55.00);
+--
+-- -- Horários de funcionamento
+-- INSERT INTO business_opening_hours (
+--     id, business_id, day_of_week, start_time, end_time, enabled
+-- )
+-- VALUES
+--     ('1', '1', 'MONDAY', '09:00', '19:00', true),
+--     ('2', '1', 'TUESDAY', '09:00', '19:00', true),
+--     ('3', '1', 'WEDNESDAY', '09:00', '19:00', true),
+--     ('4', '1', 'THURSDAY', '09:00', '19:00', true),
+--     ('5', '1', 'FRIDAY', '09:00', '19:00', true),
+--     ('6', '1', 'SATURDAY', '08:00', '17:00', true),
+--     ('7', '1', 'SUNDAY', '00:00', '00:00', false);
