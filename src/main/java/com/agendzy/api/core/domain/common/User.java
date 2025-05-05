@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -47,13 +48,21 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object otherUser) {
-        return super.equals(otherUser);
+    public boolean equals(Object otherEntity) {
+        if (this == otherEntity) {
+            return true;
+        }
+
+        if (otherEntity instanceof User user) {
+            return Objects.equals(id, user.id);
+        }
+
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(id);
     }
 
 }

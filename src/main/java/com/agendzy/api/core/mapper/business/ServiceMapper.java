@@ -18,7 +18,6 @@ public interface ServiceMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "tenant", ignore = true)
     @Mapping(target = "business", ignore = true)
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "duration", expression = "java(Duration.ofMinutes(input.getDurationInMinutes()))")

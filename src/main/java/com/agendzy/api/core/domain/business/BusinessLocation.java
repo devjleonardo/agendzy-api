@@ -10,16 +10,16 @@ import lombok.Setter;
 @Setter
 public class BusinessLocation {
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String address;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String zipcode;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String city;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String state;
 
     private Double latitude;

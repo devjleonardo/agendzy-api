@@ -7,7 +7,6 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
@@ -24,21 +23,14 @@ public class BaseEntity implements Serializable {
     @Column(length = 64)
     private String id;
 
-    @Column(length = 64)
-    private String tenant;
-
-    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     protected BaseEntity() {
-        id = IDGeneratorUtils.id();
-    }
-
-    protected BaseEntity(String id) {
-        this.id = id;
+        this.id = IDGeneratorUtils.id();
+        this.createdAt = LocalDateTime.now();
     }
 
     @Override
@@ -57,14 +49,6 @@ public class BaseEntity implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                    "id = " + id + ", " +
-                    "tenant = " + tenant + ", " +
-                ")";
     }
 
 }

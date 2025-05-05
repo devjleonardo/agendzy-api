@@ -13,7 +13,6 @@ public class BusinessCreatedOutput {
     private String id;
     private String name;
     private String segment;
-    private String city;
     private String ownerName;
 
     public static BusinessCreatedOutput of(Business business) {
@@ -21,7 +20,6 @@ public class BusinessCreatedOutput {
                 .id(business.getId())
                 .name(business.getName())
                 .segment(business.getSegment().name())
-                .city(business.getLocation().getCity())
                 .ownerName(business.getOwner().getName())
                 .build();
     }

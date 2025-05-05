@@ -8,7 +8,10 @@ import com.agendzy.api.core.usecase.common.boundary.output.data.outputresponse.O
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.agendzy.api.core.usecase.common.boundary.output.data.outputresponse.OutputResponseFactory.success;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.agendzy.api.core.usecase.common.boundary.output.data.outputresponse.OutputResponseFactory.*;
 import static com.agendzy.api.core.validator.business.BusinessAccessValidator.checkAccessAndGetBusiness;
 
 @RequiredArgsConstructor
@@ -19,20 +22,45 @@ public class ActivateBusinessUseCase {
     private final SaveGateway<Business> businessSave;
 
     public OutputResponse<Void> execute(String businessId) {
-        Business business = checkAccessAndGetBusiness(businessId, findBusinessById).getData();
+        Business business = getAuthorizedBusiness(businessId);
 
-        boolean isComplete =
-                !business.getServices().isEmpty()
-                && !business.getOpeningHours().isEmpty()
-                && business.getLocation() != null
-                && business.getProfilePhotoUrl() != null && !business.getProfilePhotoUrl().isBlank();
+        List<String> missingSteps = getMissingSteps(business);
 
-        if (isComplete) {
-            business.setActive(true);
-            businessSave.execute(business);
+        if (!missingSteps.isEmpty()) {
+            return errorBusinessRule(buildMissingStepsMessage(missingSteps));
         }
 
+        business.setActive(true);
+        businessSave.execute(business);
+
         return success();
+    }
+
+    private Business getAuthorizedBusiness(String businessId) {
+        return checkAccessAndGetBusiness(businessId, findBusinessById).getData();
+    }
+
+    private List<String> getMissingSteps(Business business) {
+        List<String> missing = new ArrayList<>();
+
+        if (business.getServices() == null || business.getServices().isEmpty()) {
+            missing.add("services");
+        }
+        if (business.getOpeningHours() == null || business.getOpeningHours().isEmpty()) {
+            missing.add("opening hours");
+        }
+        if (business.getLocation() == null) {
+            missing.add("location");
+        }
+        if (business.getProfilePhotoUrl() == null || business.getProfilePhotoUrl().isBlank()) {
+            missing.add("profile photo");
+        }
+
+        return missing;
+    }
+
+    private String buildMissingStepsMessage(List<String> missingSteps) {
+        return "Business cannot be activated. Missing steps: " + String.join(", ", missingSteps) + ".";
     }
 
 }

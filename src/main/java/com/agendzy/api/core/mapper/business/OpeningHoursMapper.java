@@ -19,7 +19,6 @@ import java.util.List;
 public interface OpeningHoursMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "tenant", ignore = true)
     @Mapping(target = "business", ignore = true)
     @Mapping(target = "dayOfWeek", expression = "java(DayOfWeek.valueOf(input.getDayOfWeek().toUpperCase()))")
     @Mapping(target = "startTime", expression = "java(LocalTime.parse(input.getStartTime()))")
@@ -34,5 +33,5 @@ public interface OpeningHoursMapper {
 
     @IterableMapping(qualifiedByName = "toOutput")
     List<OpeningHoursOutput> toOutputList(Collection<BusinessOpeningHours> entities);
-    
+
 }
