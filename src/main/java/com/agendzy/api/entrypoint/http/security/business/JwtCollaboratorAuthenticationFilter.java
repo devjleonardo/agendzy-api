@@ -2,7 +2,7 @@ package com.agendzy.api.entrypoint.http.security.business;
 
 import com.agendzy.api.core.domain.business.collaborator.Collaborator;
 import com.agendzy.api.core.gateway.business.ExtractCollaboratorAuthTokenGateway;
-import com.agendzy.api.core.usecase.business.interactor.auth.AuthCollaboratorFilterUseCase;
+import com.agendzy.api.core.usecase.business.interactor.auth.signin.AuthCollaboratorFilterUseCase;
 import com.agendzy.api.core.usecase.common.boundary.output.data.outputresponse.OutputResponse;
 import com.agendzy.api.core.usecase.business.boundary.output.auth.AuthCollaboratorTokenDataOutput;
 import com.fasterxml.jackson.databind.ObjectMapper;

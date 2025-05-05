@@ -31,6 +31,10 @@ public class Business extends BaseEntity {
 
     private String description;
 
+    private boolean active;
+
+    private String profilePhotoUrl;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BusinessSegment segment;
@@ -66,7 +70,13 @@ public class Business extends BaseEntity {
     }
 
     public void addService(BusinessService service) {
-        services.add(service);
+        service.setBusiness(this);
+        this.services.add(service);
+    }
+
+    public void addOpeningHour(BusinessOpeningHours openingHour) {
+        openingHour.setBusiness(this);
+        this.openingHours.add(openingHour);
     }
 
     @Override

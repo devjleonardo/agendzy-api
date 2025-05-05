@@ -1,4 +1,4 @@
-package com.agendzy.api.core.usecase.business.interactor.auth;
+package com.agendzy.api.core.usecase.business.interactor.auth.signin;
 
 import com.agendzy.api.core.domain.business.Business;
 import com.agendzy.api.core.domain.business.collaborator.Collaborator;
@@ -9,7 +9,7 @@ import com.agendzy.api.core.gateway.business.CreateCollaboratorAuthGateway;
 import com.agendzy.api.core.gateway.common.FindAllWithFilterGateway;
 import com.agendzy.api.core.gateway.common.FindOneGateway;
 import com.agendzy.api.core.gateway.common.auth.ValidatePasswordGateway;
-import com.agendzy.api.core.usecase.business.boundary.input.data.auth.CollaboratorAuthCredentialInput;
+import com.agendzy.api.core.usecase.business.boundary.input.data.auth.signin.CollaboratorAuthCredentialInput;
 import com.agendzy.api.core.usecase.common.boundary.input.query.WhereEmail;
 import com.agendzy.api.core.usecase.common.boundary.input.query.WhereUserId;
 import com.agendzy.api.core.usecase.common.boundary.output.data.DomainError;

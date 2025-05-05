@@ -3,6 +3,7 @@ package com.agendzy.api.core.usecase.business.boundary.input.data;
 import com.agendzy.api.core.domain.business.BusinessLocation;
 import com.agendzy.api.core.domain.business.BusinessSegment;
 import com.agendzy.api.core.domain.business.BusinessTeamSize;
+import com.agendzy.api.core.usecase.business.boundary.input.data.openinghours.BusinessOpeningHoursInput;
 import com.agendzy.api.core.usecase.business.boundary.input.data.service.ServiceInput;
 import com.agendzy.api.core.usecase.common.boundary.input.data.user.CreateUserInput;
 import jakarta.validation.constraints.NotBlank;

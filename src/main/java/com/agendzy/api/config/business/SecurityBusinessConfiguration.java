@@ -2,9 +2,8 @@ package com.agendzy.api.config.business;
 
 import com.agendzy.api.core.gateway.business.ExtractCollaboratorAuthTokenGateway;
 import com.agendzy.api.core.gateway.common.FindOneGateway;
-import com.agendzy.api.core.usecase.business.interactor.auth.AuthCollaboratorFilterUseCase;
+import com.agendzy.api.core.usecase.business.interactor.auth.signin.AuthCollaboratorFilterUseCase;
 import com.agendzy.api.core.usecase.common.boundary.input.query.WhereEmail;
-import com.agendzy.api.dataprovider.lib.auth.business.ExtractCollaboratorAuthToken;
 import com.agendzy.api.entrypoint.http.security.business.JwtCollaboratorAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

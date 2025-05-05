@@ -27,7 +27,7 @@ public class ServiceResource {
 
     @GetMapping("/{serviceId}")
     public ResponseEntity<Object> getServiceById(@PathVariable String businessId,
-                                                         @PathVariable String serviceId) {
+                                                 @PathVariable String serviceId) {
         return HandlingResponse.execute(getServiceUseCase.execute(businessId, serviceId));
     }
 

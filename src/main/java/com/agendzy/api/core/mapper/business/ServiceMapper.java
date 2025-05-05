@@ -6,6 +6,8 @@ import com.agendzy.api.core.usecase.business.boundary.output.service.ServiceOutp
 import org.mapstruct.*;
 
 import java.time.Duration;
+import java.util.Collection;
+import java.util.List;
 
 @Mapper(
         componentModel = "spring",
@@ -25,8 +27,12 @@ public interface ServiceMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateService(@MappingTarget BusinessService service, ServiceInput input);
 
+    @Named("toOutput")
     @Mapping(target = "durationInMinutes", expression = "java(service.getDuration() != null ? service.getDuration().toMinutes() : 0L)")
     ServiceOutput toOutput(BusinessService service);
+
+    @IterableMapping(qualifiedByName = "toOutput")
+    List<ServiceOutput> toOutputList(Collection<BusinessService> services);
 
 }
 

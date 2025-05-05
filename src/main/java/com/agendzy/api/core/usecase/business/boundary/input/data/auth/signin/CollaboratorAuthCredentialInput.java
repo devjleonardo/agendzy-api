@@ -1,4 +1,4 @@
-package com.agendzy.api.core.usecase.business.boundary.input.data.auth;
+package com.agendzy.api.core.usecase.business.boundary.input.data.auth.signin;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

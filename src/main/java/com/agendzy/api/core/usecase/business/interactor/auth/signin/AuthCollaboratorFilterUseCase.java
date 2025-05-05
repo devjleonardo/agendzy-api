@@ -1,4 +1,4 @@
-package com.agendzy.api.core.usecase.business.interactor.auth;
+package com.agendzy.api.core.usecase.business.interactor.auth.signin;
 
 import com.agendzy.api.core.domain.business.auth.CollaboratorContext;
 import com.agendzy.api.core.domain.business.auth.CollaboratorContextCurrent;

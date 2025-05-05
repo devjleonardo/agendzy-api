@@ -1,4 +1,4 @@
-package com.agendzy.api.core.usecase.business.boundary.input.data;
+package com.agendzy.api.core.usecase.business.boundary.input.data.openinghours;
 
 import lombok.Getter;
 import lombok.Setter;
