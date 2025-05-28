@@ -18,8 +18,8 @@ public class CheckBusinessEmailAvailabilityUseCase {
     private final FindOneGateway<Business, WhereEmail> findBusinessByOwnerEmail;
 
     public OutputResponse<BusinessEmailAvailabilityOutput> execute(BusinessEmailAvailabilityInput input) {
-        boolean available = !isEmailAlreadyOwnerOfBusiness(input);
-        return success(new BusinessEmailAvailabilityOutput(available));
+        boolean businessEmailAlreadyInUse = isEmailAlreadyOwnerOfBusiness(input);
+        return success(new BusinessEmailAvailabilityOutput(businessEmailAlreadyInUse));
     }
 
     private boolean isEmailAlreadyOwnerOfBusiness(BusinessEmailAvailabilityInput input) {
